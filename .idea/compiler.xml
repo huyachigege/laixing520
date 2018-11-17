@@ -15,5 +15,6 @@
         <module name="pinyougou-shop-web" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel target="11" />
   </component>
 </project>

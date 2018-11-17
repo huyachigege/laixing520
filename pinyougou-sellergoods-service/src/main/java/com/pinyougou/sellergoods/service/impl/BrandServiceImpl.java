@@ -9,6 +9,7 @@ import com.pinyougou.pojo.TbBrand;
 import com.pinyougou.pojo.TbBrandExample;
 import com.pinyougou.sellergoods.service.IBrandService;
 import org.springframework.beans.factory.annotation.Autowired;
+import com.pinyougou.pojo.TbBrandExample.Criteria;
 
 import java.util.List;
 
@@ -63,7 +64,7 @@ public class BrandServiceImpl implements IBrandService {
     public PageResult<TbBrand> findPage(TbBrand brand, int pageNum, int pageSize) {
         PageHelper.startPage(pageNum, pageSize);
         TbBrandExample example = new TbBrandExample();
-        TbBrandExample.Criteria criteria = example.createCriteria();
+        Criteria criteria = example.createCriteria();
         if (brand != null) {
             if (brand.getName() != null && brand.getName().length() > 0) {
                 criteria.andNameLike("%" + brand.getName() + "%");
