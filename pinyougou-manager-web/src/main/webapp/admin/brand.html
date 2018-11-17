@@ -25,9 +25,18 @@
                 );
 
             };
+
             $scope.reloadList = function () {
                 //切换页码
                 $scope.findPage($scope.paginationConf.currentPage, $scope.paginationConf.itemsPerPage);
+
+
+
+            };
+            $scope.isSelected = function (id) {
+                if ($scope.ids.indexOf(id)>-1) {
+                    return true;
+                }
             };
             $scope.paginationConf = {
                 currentPage: 1,
@@ -36,6 +45,7 @@
                 perPageOptions: [10, 20, 30, 40, 50],
                 onChange: function () {
                     $scope.reloadList();
+
                 }//重新加载
             };
             $scope.findPage = function () {
@@ -66,6 +76,39 @@
                     $scope.brand = response;
                 });
             };
+            $scope.ids = [];
+            $scope.delete = function () {
+                $http.get('../brand/delete.do?ids='+$scope.ids).success(function (response) {
+                    $scope.brand = response;
+                });
+                $scope.reloadList();
+            };
+            $scope.changeChecked = function ($event,id) {
+                if ($event.target.checked) {
+                    $scope.ids.push(id);
+                } else {
+                    var index = $scope.ids.indexOf(id);
+                    $scope.ids.splice(index,1);
+                }
+
+            };
+            $scope.changeAll = function ($event) {
+                if ($event.target.checked) {
+                    $("#dataList input").each(function () {
+                        this.checked = true;
+                    });
+                    $scope.ids = [];
+                    for (var i = 0; i < $scope.list.length;i++) {
+                        $scope.ids.push($scope.list[i].id);
+                    }
+                } else {
+                    $("#dataList input").each(function () {
+                        this.checked = false;
+                    });
+                    $scope.ids = [];
+                }
+
+            };
         });
 
     </script>
@@ -90,7 +133,7 @@
                     <button type="button" class="btn btn-default" title="新建" data-toggle="modal"
                             data-target="#editModal" ng-click="brand={}"><i class="fa fa-file-o"></i> 新建
                     </button>
-                    <button type="button" class="btn btn-default" title="删除"><i class="fa fa-trash-o"></i> 删除</button>
+                    <button type="button" class="btn btn-default" title="删除" ng-click="delete()"><i class="fa fa-trash-o"></i> 删除</button>
                     <button type="button" class="btn btn-default" title="刷新" onclick="window.location.reload();"><i
                             class="fa fa-refresh"></i> 刷新
                     </button>
@@ -109,7 +152,7 @@
             <thead>
             <tr>
                 <th class="" style="padding-right:0px">
-                    <input id="selall" type="checkbox" class="icheckbox_square-blue">
+                    <input id="selall" type="checkbox" class="icheckbox_square-blue" ng-click="changeAll($event)">
                 </th>
                 <th class="sorting_asc">品牌ID</th>
                 <th class="sorting">品牌名称</th>
@@ -118,8 +161,8 @@
             </tr>
             </thead>
             <tbody>
-            <tr ng-repeat="brand in list">
-                <td><input type="checkbox"></td>
+            <tr ng-repeat="brand in list" >
+                <td><input type="checkbox" ng-click="changeChecked($event,brand.id)" ng-checked="isSelected(brand.id)"></td>
                 <td>{{brand.id}}</td>
                 <td>{{brand.name}}</td>
                 <td>{{brand.firstChar}}</td>
