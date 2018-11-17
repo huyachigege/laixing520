@@ -2,11 +2,11 @@ package com.pinyougou.entity;
 
 import java.io.Serializable;
 
-public class InsertResult implements Serializable {
+public class CRUDResult implements Serializable {
     private boolean success;
     private String message;
 
-    public InsertResult(boolean success, String message) {
+    public CRUDResult(boolean success, String message) {
         this.success = success;
         this.message = message;
     }
