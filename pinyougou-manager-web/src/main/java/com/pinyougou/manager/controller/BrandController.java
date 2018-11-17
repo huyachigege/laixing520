@@ -18,7 +18,7 @@ public class BrandController {
     private IBrandService brandService;
 
     @RequestMapping("findAll")
-    public List<TbBrand> findAll() {
+    public PageResult<TbBrand> findAll() {
         return brandService.findAll();
     }
 
@@ -64,6 +64,10 @@ public class BrandController {
             return new InsertResult(false, "删除失败");
         }
 
+    }
+    @RequestMapping("search")
+    public PageResult<TbBrand> search(@RequestBody TbBrand brand,int page, int size) {
+        return brandService.findPage(brand,page, size);
     }
 
 }

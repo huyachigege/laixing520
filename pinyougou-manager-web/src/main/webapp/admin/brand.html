@@ -13,107 +13,10 @@
     <script src="../plugins/bootstrap/js/bootstrap.min.js"></script>
     <script src="../plugins/angularjs/angular.min.js"></script>
     <script src="../plugins/angularjs/pagination.js"></script>
+    <script src="../js/base_pagination.js"></script>
+    <script src="../js/service/brandService.js"></script>
+    <script src="../js/controller/brandController.js"></script>
     <link rel="stylesheet" href="../plugins/angularjs/pagination.css">
-    <script>
-        var app = angular.module('pinyougou', ['pagination']);
-        app.controller('brandController', function ($scope, $http) {
-            $scope.findAll = function () {
-                $http.get('../brand/findAll.do').success(
-                    function (response) {
-                        $scope.list = response;
-                    }
-                );
-
-            };
-
-            $scope.reloadList = function () {
-                //切换页码
-                $scope.findPage($scope.paginationConf.currentPage, $scope.paginationConf.itemsPerPage);
-
-
-
-            };
-            $scope.isSelected = function (id) {
-                if ($scope.ids.indexOf(id)>-1) {
-                    return true;
-                }
-            };
-            $scope.paginationConf = {
-                currentPage: 1,
-                // totalItems: 10,
-                itemsPerPage: 10,
-                perPageOptions: [10, 20, 30, 40, 50],
-                onChange: function () {
-                    $scope.reloadList();
-
-                }//重新加载
-            };
-            $scope.findPage = function () {
-                $http.get('../brand/findPage.do?page=' + $scope.paginationConf.currentPage + '&size=' + $scope.paginationConf.itemsPerPage).success(
-                    function (response) {
-                        $scope.list = response.rows;
-                        $scope.paginationConf.totalItems = response.total;
-                    }
-                );
-            };
-            $scope.save = function () {
-                var methodName;
-                if ($scope.brand.id != null) {
-                    methodName = 'update';
-                } else {
-                    methodName = 'add';
-                }
-                $http.post('../brand/'+methodName+'.do', $scope.brand).success(function (response) {
-                    if (response.success) {
-                        $scope.reloadList();
-                    } else {
-                        alert(response.message);
-                    }
-                });
-            };
-            $scope.findOne = function (id) {
-                $http.get('../brand/findOne.do?id='+id).success(function (response) {
-                    $scope.brand = response;
-                });
-            };
-            $scope.ids = [];
-            $scope.delete = function () {
-                $http.get('../brand/delete.do?ids='+$scope.ids).success(function (response) {
-                    $scope.brand = response;
-                });
-                $scope.reloadList();
-            };
-            $scope.changeChecked = function ($event,id) {
-                if ($event.target.checked) {
-                    $scope.ids.push(id);
-                } else {
-                    var index = $scope.ids.indexOf(id);
-                    $scope.ids.splice(index,1);
-                }
-
-            };
-            $scope.changeAll = function ($event) {
-                if ($event.target.checked) {
-                    $("#dataList input").each(function () {
-                        this.checked = true;
-                    });
-                    $scope.ids = [];
-                    for (var i = 0; i < $scope.list.length;i++) {
-                        $scope.ids.push($scope.list[i].id);
-                    }
-                } else {
-                    $("#dataList input").each(function () {
-                        this.checked = false;
-                    });
-                    $scope.ids = [];
-                }
-
-            };
-        });
-
-    </script>
-
-
 </head>
 <body class="hold-transition skin-red sidebar-mini" ng-app="pinyougou" ng-controller="brandController">
 <!-- .box-body -->
@@ -133,15 +36,22 @@
                     <button type="button" class="btn btn-default" title="新建" data-toggle="modal"
                             data-target="#editModal" ng-click="brand={}"><i class="fa fa-file-o"></i> 新建
                     </button>
-                    <button type="button" class="btn btn-default" title="删除" ng-click="delete()"><i class="fa fa-trash-o"></i> 删除</button>
-                    <button type="button" class="btn btn-default" title="刷新" onclick="window.location.reload();"><i
+                    <button type="button" class="btn btn-default" title="删除" ng-click="delete()"><i
+                            class="fa fa-trash-o"></i> 删除
+                    </button>
+                    <button type="button" class="btn btn-default" title="刷新" ng-click="reloadList()"><i
                             class="fa fa-refresh"></i> 刷新
+                    </button>
+                    <button type="button" class="btn btn-default" title="刷新" ng-click="findAll()"><i
+                            class="fa fa-refresh"></i> 不分页展示
                     </button>
                 </div>
             </div>
         </div>
         <div class="box-tools pull-right">
             <div class="has-feedback">
+                品牌名称: <input ng-model="searchBrand.name"> 品牌首字母: <input ng-model="searchBrand.firstChar">
+                <button class="btn btn-default" ng-click="search()">查询</button>
 
             </div>
         </div>
@@ -161,19 +71,22 @@
             </tr>
             </thead>
             <tbody>
-            <tr ng-repeat="brand in list" >
-                <td><input type="checkbox" ng-click="changeChecked($event,brand.id)" ng-checked="isSelected(brand.id)"></td>
+            <tr ng-repeat="brand in list">
+                <td><input type="checkbox" ng-click="changeChecked($event,brand.id)" ng-checked="isSelected(brand.id)">
+                </td>
                 <td>{{brand.id}}</td>
                 <td>{{brand.name}}</td>
                 <td>{{brand.firstChar}}</td>
                 <td class="text-center">
-                    <button type="button" class="btn bg-olive btn-xs" data-toggle="modal" data-target="#editModal" ng-click="findOne(brand.id)">修改
+                    <button type="button" class="btn bg-olive btn-xs" data-toggle="modal" data-target="#editModal"
+                            ng-click="findOne(brand.id)">修改
                     </button>
                 </td>
             </tr>
             </tbody>
         </table>
         <!--数据列表/-->
+        <!--分页插件-->
         <tm-pagination conf="paginationConf"></tm-pagination>
 
     </div>

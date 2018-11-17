@@ -6,10 +6,12 @@ import com.github.pagehelper.PageHelper;
 import com.pinyougou.entity.PageResult;
 import com.pinyougou.mapper.TbBrandMapper;
 import com.pinyougou.pojo.TbBrand;
+import com.pinyougou.pojo.TbBrandExample;
 import com.pinyougou.sellergoods.service.IBrandService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
+
 @Service
 public class BrandServiceImpl implements IBrandService {
     @Autowired
@@ -17,15 +19,16 @@ public class BrandServiceImpl implements IBrandService {
 
 
     @Override
-    public List<TbBrand> findAll() {
-        return brandMapper.selectByExample(null);
+    public PageResult<TbBrand> findAll() {
+        List<TbBrand> page = brandMapper.selectByExample(null);
+        return new PageResult<>(page.size(), page);
     }
 
     @Override
     public PageResult<TbBrand> findPage(int pageNum, int pageSize) {
         PageHelper.startPage(pageNum, pageSize);
         Page<TbBrand> page = (Page<TbBrand>) brandMapper.selectByExample(null);
-        return new PageResult<>(page.getTotal(),page.getResult());
+        return new PageResult<>(page.getTotal(), page.getResult());
     }
 
     @Override
@@ -54,6 +57,23 @@ public class BrandServiceImpl implements IBrandService {
         for (Long id : ids) {
             brandMapper.deleteByPrimaryKey(id);
         }
+    }
+
+    @Override
+    public PageResult<TbBrand> findPage(TbBrand brand, int pageNum, int pageSize) {
+        PageHelper.startPage(pageNum, pageSize);
+        TbBrandExample example = new TbBrandExample();
+        TbBrandExample.Criteria criteria = example.createCriteria();
+        if (brand != null) {
+            if (brand.getName() != null && brand.getName().length() > 0) {
+                criteria.andNameLike("%" + brand.getName() + "%");
+            }
+            if (brand.getFirstChar() != null && brand.getFirstChar().length() > 0) {
+                criteria.andFirstCharLike("%" + brand.getFirstChar() + "%");
+            }
+        }
+        Page<TbBrand> page = (Page<TbBrand>) brandMapper.selectByExample(example);
+        return new PageResult<>(page.getTotal(), page.getResult());
     }
 
 }
