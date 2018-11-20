@@ -3,14 +3,12 @@ app.controller('baseController', function ($scope) {
         if ($scope.paginationConf.itemsPerPage == $scope.paginationConf.totalItems) {
             $scope.findAll();
         }
-
         else {
             $scope.search();
         }
-
     };
     $scope.isSelected = function (id) {
-        if ($scope.ids.indexOf(id) > -1) {
+        if ($scope.selectIds.indexOf(id) > -1) {
             return true;
         }
     };
@@ -26,10 +24,10 @@ app.controller('baseController', function ($scope) {
     };
     $scope.changeChecked = function ($event, id) {
         if ($event.target.checked) {
-            $scope.ids.push(id);
+            $scope.selectIds.push(id);
         } else {
-            var index = $scope.ids.indexOf(id);
-            $scope.ids.splice(index, 1);
+            var index = $scope.selectIds.indexOf(id);
+            $scope.selectIds.splice(index, 1);
         }
 
     };
@@ -38,15 +36,15 @@ app.controller('baseController', function ($scope) {
             $("#dataList input").each(function () {
                 this.checked = true;
             });
-            $scope.ids = [];
+            $scope.selectIds = [];
             for (var i = 0; i < $scope.list.length; i++) {
-                $scope.ids.push($scope.list[i].id);
+                $scope.selectIds.push($scope.list[i].id);
             }
         } else {
             $("#dataList input").each(function () {
                 this.checked = false;
             });
-            $scope.ids = [];
+            $scope.selectIds = [];
         }
 
     };

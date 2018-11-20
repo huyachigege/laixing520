@@ -1,8 +1,10 @@
 package com.pinyougou.manager.controller;
 import java.util.List;
+import java.util.Map;
 
 import com.pinyougou.entity.CRUDResult;
 import com.pinyougou.entity.PageResult;
+import com.pinyougou.pojoGroup.SpecificationWithOption;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -43,13 +45,13 @@ public class SpecificationController {
 	
 	/**
 	 * 增加
-	 * @param specification
+	 * @param
 	 * @return
 	 */
 	@RequestMapping("/add")
-	public CRUDResult add(@RequestBody TbSpecification specification){
+	public CRUDResult add(@RequestBody SpecificationWithOption specificationWithOption){
 		try {
-			specificationService.add(specification);
+			specificationService.add(specificationWithOption);
 			return new CRUDResult(true, "增加成功");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -59,13 +61,13 @@ public class SpecificationController {
 	
 	/**
 	 * 修改
-	 * @param specification
+	 * @param
 	 * @return
 	 */
 	@RequestMapping("/update")
-	public CRUDResult update(@RequestBody TbSpecification specification){
+	public CRUDResult update(@RequestBody SpecificationWithOption specificationWithOption){
 		try {
-			specificationService.update(specification);
+			specificationService.update(specificationWithOption);
 			return new CRUDResult(true, "修改成功");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -79,7 +81,7 @@ public class SpecificationController {
 	 * @return
 	 */
 	@RequestMapping("/findOne")
-	public TbSpecification findOne(Long id){
+	public SpecificationWithOption findOne(Long id){
 		return specificationService.findOne(id);		
 	}
 	
@@ -110,5 +112,9 @@ public class SpecificationController {
 	public PageResult search(@RequestBody TbSpecification specification, int page, int rows  ){
 		return specificationService.findPage(specification, page, rows);		
 	}
+	@RequestMapping("/selectOptionList")
+	public List<Map> selectOptionList(){
+		return specificationService.selectOptionList();
+	};
 	
 }

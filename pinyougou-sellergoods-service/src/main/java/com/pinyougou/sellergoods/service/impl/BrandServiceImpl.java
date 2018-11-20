@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.pinyougou.pojo.TbBrandExample.Criteria;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class BrandServiceImpl implements IBrandService {
@@ -75,6 +76,11 @@ public class BrandServiceImpl implements IBrandService {
         }
         Page<TbBrand> page = (Page<TbBrand>) brandMapper.selectByExample(example);
         return new PageResult<>(page.getTotal(), page.getResult());
+    }
+
+    @Override
+    public List<Map> selectOptionList() {
+        return brandMapper.selectOptionList();
     }
 
 }

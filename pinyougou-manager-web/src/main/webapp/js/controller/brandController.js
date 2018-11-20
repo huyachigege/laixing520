@@ -47,9 +47,9 @@ app.controller('brandController', function ($scope,$controller,brandService) {
             $scope.brand = response;
         });
     };
-    $scope.ids = [];
+    $scope.selectIds = [];
     $scope.delete = function () {
-        brandService.delete($scope.ids).success(function (response) {
+        brandService.delete($scope.selectIds).success(function (response) {
             if (response.success) {
                 $scope.reloadList();
             } else {
