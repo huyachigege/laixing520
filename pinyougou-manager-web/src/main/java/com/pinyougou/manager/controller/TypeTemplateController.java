@@ -1,5 +1,6 @@
 package com.pinyougou.manager.controller;
 import java.util.List;
+import java.util.Map;
 
 import com.pinyougou.entity.CRUDResult;
 import com.pinyougou.entity.PageResult;
@@ -108,6 +109,11 @@ public class TypeTemplateController {
 	@RequestMapping("/search")
 	public PageResult search(@RequestBody TbTypeTemplate typeTemplate, int page, int rows  ){
 		return typeTemplateService.findPage(typeTemplate, page, rows);		
+	}
+	@RequestMapping("findTypeList")
+	List<Map> findTypeList() {
+		return typeTemplateService.findTypeList();
+
 	}
 	
 }

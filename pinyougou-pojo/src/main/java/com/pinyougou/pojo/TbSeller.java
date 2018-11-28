@@ -19,6 +19,23 @@ public class TbSeller implements Serializable {
     private String telephone;
 
     private String status;
+    private String statusStr;
+
+    public String getStatusStr() {
+        if (status.equals("0")) {
+            statusStr = "待审核";
+        }
+        if (status.equals("1")) {
+            statusStr = "已审核";
+        }
+        if (status.equals("2")) {
+            statusStr = "审核未通过";
+        }
+        if (status.equals("3")) {
+            statusStr = "关闭";
+        }
+        return statusStr;
+    }
 
     private String addressDetail;
 
@@ -51,6 +68,16 @@ public class TbSeller implements Serializable {
     private String bankUser;
 
     private String bankName;
+
+    public String getBankAccountId() {
+        return bankAccountId;
+    }
+
+    public void setBankAccountId(String bankAccountId) {
+        this.bankAccountId = bankAccountId;
+    }
+
+    private String bankAccountId;
 
     public String getSellerId() {
         return sellerId;

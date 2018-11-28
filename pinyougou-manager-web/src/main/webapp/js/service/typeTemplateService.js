@@ -29,5 +29,9 @@ app.service('typeTemplateService',function($http){
 	this.search=function(page,rows,searchEntity){
 		return $http.post('../typeTemplate/search.do?page='+page+"&rows="+rows, searchEntity);
 	}
+    this.findTypeList = function () {
+        return $http.get('../typeTemplate/findTypeList.do');
+
+    };
 
 });

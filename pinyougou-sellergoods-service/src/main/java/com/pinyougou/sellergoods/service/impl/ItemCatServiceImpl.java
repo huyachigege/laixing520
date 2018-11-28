@@ -1,7 +1,10 @@
 package com.pinyougou.sellergoods.service.impl;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import com.pinyougou.entity.PageResult;
+import com.pinyougou.pojo.TbItem;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.alibaba.dubbo.config.annotation.Service;
 import com.github.pagehelper.Page;
@@ -74,9 +77,16 @@ public class ItemCatServiceImpl implements ItemCatService {
 	 */
 	@Override
 	public void delete(Long[] ids) {
-		for(Long id:ids){
-			itemCatMapper.deleteByPrimaryKey(id);
-		}		
+		TbItemCatExample example = new TbItemCatExample();
+		TbItemCatExample.Criteria criteria = example.createCriteria();
+		criteria.andIdIn(Arrays.asList(ids));
+		ArrayList<Long> list = new ArrayList<>();
+		List<TbItemCat> tbItems = itemCatMapper.selectByExample(null);
+		for (TbItemCat tbItem : tbItems) {
+			list.add(tbItem.getParentId());
+		}
+		criteria.andIdNotIn(list);
+		itemCatMapper.deleteByExample(example);
 	}
 	
 	
@@ -97,5 +107,13 @@ public class ItemCatServiceImpl implements ItemCatService {
 		Page<TbItemCat> page= (Page<TbItemCat>)itemCatMapper.selectByExample(example);		
 		return new PageResult(page.getTotal(), page.getResult());
 	}
-	
+
+    @Override
+    public List<TbItemCat> findByParentId(Long parentId) {
+		TbItemCatExample example = new TbItemCatExample();
+		Criteria criteria = example.createCriteria();
+		criteria.andParentIdEqualTo(parentId);
+		return itemCatMapper.selectByExample(example);
+    }
+
 }

@@ -3,6 +3,7 @@ import java.util.List;
 
 import com.pinyougou.entity.CRUDResult;
 import com.pinyougou.entity.PageResult;
+import com.pinyougou.pojoGroup.Goods;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -46,16 +47,7 @@ public class GoodsController {
 	 * @param goods
 	 * @return
 	 */
-	@RequestMapping("/add")
-	public CRUDResult add(@RequestBody TbGoods goods){
-		try {
-			goodsService.add(goods);
-			return new CRUDResult(true, "增加成功");
-		} catch (Exception e) {
-			e.printStackTrace();
-			return new CRUDResult(false, "增加失败");
-		}
-	}
+
 	
 	/**
 	 * 修改
@@ -63,7 +55,7 @@ public class GoodsController {
 	 * @return
 	 */
 	@RequestMapping("/update")
-	public CRUDResult update(@RequestBody TbGoods goods){
+	public CRUDResult update(@RequestBody Goods goods){
 		try {
 			goodsService.update(goods);
 			return new CRUDResult(true, "修改成功");
@@ -79,7 +71,7 @@ public class GoodsController {
 	 * @return
 	 */
 	@RequestMapping("/findOne")
-	public TbGoods findOne(Long id){
+	public Goods findOne(Long id){
 		return goodsService.findOne(id);		
 	}
 	
@@ -110,5 +102,14 @@ public class GoodsController {
 	public PageResult search(@RequestBody TbGoods goods, int page, int rows  ){
 		return goodsService.findPage(goods, page, rows);		
 	}
-	
+	@RequestMapping("/updateStatus")
+	public CRUDResult updateStatus(Long[] ids,String status  ){
+		try {
+			goodsService.updateStatus(ids,status);
+			return new CRUDResult(true, "审核成功");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new CRUDResult(false, "审核失败");
+		}
+	}
 }

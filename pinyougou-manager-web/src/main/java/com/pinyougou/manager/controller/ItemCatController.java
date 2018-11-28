@@ -89,7 +89,7 @@ public class ItemCatController {
 	 * @return
 	 */
 	@RequestMapping("/delete")
-	public CRUDResult delete(Long [] ids){
+	public CRUDResult delete(Long[] ids){
 		try {
 			itemCatService.delete(ids);
 			return new CRUDResult(true, "删除成功"); 
@@ -110,5 +110,9 @@ public class ItemCatController {
 	public PageResult search(@RequestBody TbItemCat itemCat, int page, int rows  ){
 		return itemCatService.findPage(itemCat, page, rows);		
 	}
-	
+
+	@RequestMapping("findByParentId")
+	public List<TbItemCat> findByParentId(Long parentId) {
+		return itemCatService.findByParentId(parentId);
+	}
 }
